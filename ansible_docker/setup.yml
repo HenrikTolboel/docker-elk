@@ -1,0 +1,43 @@
+---
+- hosts: prod-splunk-all
+  become: yes
+  tasks:
+  - name: Install system packages
+    yum:
+      name: epel-release,dkms,yum-utils
+      state: latest
+
+  - name: Remove old Docker packages
+    yum:
+      name: docker,docker-common,container-selinux,docker-engine
+      state: absent
+
+  - name: Add Docker repository
+    copy:
+      src: docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+
+  - name: Install Docker packages
+    yum:
+      name: docker-ce
+      state: latest
+      update_cache: yes
+
+  - name: Install Docker compose
+    shell: 'curl -L "https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
+
+  - name: Set permissions for Docker compose
+    file:
+      path: /usr/local/bin/docker-compose
+      mode: 0755
+
+  - name: Add sysdeploy to docker group
+    user:
+      name: sysdeploy
+      groups: docker
+
+  - name: Enable and start Docker service
+    service:
+      name: docker
+      enabled: yes
+      state: started

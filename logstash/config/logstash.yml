@@ -1,0 +1,18 @@
+---
+## Default Logstash configuration from logstash-docker.
+## from https://github.com/elastic/logstash-docker/blob/master/build/logstash/config/logstash-oss.yml
+#
+http.host: "0.0.0.0"
+path.config: /usr/share/logstash/pipeline
+
+log.level: info
+
+# elasticsearch is the dns-name of the elasticsearch docker server - this is on the secret internal network!
+# dont change it from elasticsearch:9200, as this is the name in docker-compose file
+xpack.monitoring.elasticsearch.url: http://elasticsearch:9200
+
+xpack.monitoring.enabled: true
+
+#xpack.monitoring.elasticsearch.username: logstash_system
+#xpack.monitoring.elasticsearch.password: changeme  # unset by default. see:
+# https://www.elastic.co/guide/en/logstash/current/ls-security.html#ls-monitoring-user

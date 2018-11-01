@@ -1,0 +1,35 @@
+[ci-jboss]
+ci1 ansible_host=172.1.10.209
+ci2 ansible_host=172.1.10.84
+[ci-jboss:vars]
+server_type=jboss
+ansible_user=ansible_user
+ansible_ssh_pass=ansible_pass
+
+[ci-all]
+cisftp ansible_host=172.1.30.29 server_type=sftp
+[ci-all:vars]
+ansible_user=ansible_user
+ansible_ssh_pass=ssh_pass
+
+[ci-all:children]
+ci-jboss
+
+
+# INTETEST
+[intetest-jboss]
+appintetest01 ansible_host=10.1.2.11
+appintetest02 ansible_host=10.1.2.12
+webintetest01 ansible_host=10.1.2.71
+webintetest02 ansible_host=10.1.2.72
+[intetest-jboss:vars]
+server_type=jboss
+
+[intetest-other]
+sqlintetest01 ansible_host=10.1.4.12 server_type=sql
+sftpintetest01 ansible_host=10.1.4.201 server_type=sftp
+
+[intetest-all:children]
+intetest-jboss
+intetest-other
+
